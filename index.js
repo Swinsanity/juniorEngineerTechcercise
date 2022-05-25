@@ -3,12 +3,19 @@ var res = require('express/lib/response');
 
 var express = require('express');
 var app = express();
+var fs = require('fs');
 var PORT = 8080;
 
 app.use( express.json() )
 
-// app.get('./transactions.json', (req, res) => {
-//     console.log(res)
+app.get('/getTransactions', (req, res) => {
+    fs.readFile("transactions.json", 'utf-8', function(err, data){
+        console.log(data)
+        res.end(data);
+
+    })
+});
+        
 
 //     res.sendFile(path.join(juniorEngineerTechcercise, './transactions.json'));
 // });
@@ -38,4 +45,4 @@ app.use( express.json() )
 app.listen(
     PORT,
     () => console.log(`it's alive! on http://localhost:${PORT}`)
-)
+);

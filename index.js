@@ -1,12 +1,16 @@
-var res = require('express/lib/response');
-
-
-var express = require('express');
-var app = express();
-var fs = require('fs');
-var PORT = 8080;
+const res = require('express/lib/response');
+const express = require('express');
+const http = require('http');
+const app = express();
+const fs = require('fs');
+const PORT = 8080;
 
 app.use( express.json() )
+
+app.listen(
+    PORT,
+    () => console.log(`It's alive! on http://localhost:${PORT}`)
+);
 
 app.get('/getTransactions', (req, res) => {
     fs.readFile("transactions.json", 'utf-8', function(err, data){
@@ -15,11 +19,44 @@ app.get('/getTransactions', (req, res) => {
 
     })
 });
-        
 
-//     res.sendFile(path.join(juniorEngineerTechcercise, './transactions.json'));
+app.get('/getFirstTransaction', (req, res) => {
+    
+    fs.readFile("transactions.json", 'utf-8', (err, jsonString) => {
+        if (err) {
+            console.log(err);
+        } else {
+            try {
+                var data = JSON.parse(JSON.stringify(jsonString));
+                console.log(data.Id)
+                res.send(data.Id)
+            } catch (err) {
+                console.log('Error parsing JSON', err);
+            }
+            
+        }
+    })
+});
+
+// app.get('/getTransactions/:id', (req, res) => {
+//     var { id } = req.params
+    
+//     fs.readFile("transactions.json", 'utf-8', (err, jsonString) => {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             try {
+//                 var data = JSON.parse(jsonString);
+//                 if (data.Id === id) {
+//                     return data
+//                 }
+//             } catch (err) {
+//                 console.log('Error parsing JSON', err);
+//             }
+            
+//         }
+//     })
 // });
-
 
 // app.get('/tshirt', (req, res) => {
 //     res.status(200).send({
@@ -41,8 +78,3 @@ app.get('/getTransactions', (req, res) => {
 //         tshirt: `👕 with your ${logo} and ID of ${id}`,
 //     });
 // });
-
-app.listen(
-    PORT,
-    () => console.log(`it's alive! on http://localhost:${PORT}`)
-);
